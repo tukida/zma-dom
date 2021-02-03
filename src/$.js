@@ -1,5 +1,5 @@
 import { getWindow, getDocument } from 'ssr-window';
-import Dom7 from './dom7-class';
+import Dom7 from './zma-dom-class';
 import { arrayUnique } from './utils';
 
 function qsa(selector, context) {

@@ -1,12 +1,12 @@
 {
-  "name": "dom7-src",
-  "version": "3.0.0",
+  "name": "zma-dom",
+  "version": "0.0.0",
   "description": "Minimalistic JavaScript library for DOM manipulation, with a jQuery-compatible API",
   "sideEffects": false,
-  "main": "dom7.cjs.js",
-  "types": "dom7.d.ts",
-  "jsnext:main": "dom7.esm.js",
-  "module": "dom7.esm.js",
+  "main": "zma-dom.cjs.js",
+  "types": "zma-dom.d.ts",
+  "jsnext:main": "zma-dom.esm.js",
+  "module": "zma-dom.esm.js",
   "scripts": {
     "build:dev": "cross-env NODE_ENV=development node ./scripts/build",
     "build:prod": "cross-env NODE_ENV=production node ./scripts/build",
@@ -17,15 +17,16 @@
     "lint": "eslint --ext .js,.ts,.tsx .",
     "test": "node ./scripts/test",
     "validate": "npm-run-all --parallel test check-format lint",
-    "release": "npm run validate && node ./scripts/release"
+    "version": "yarn build:prod",
+    "release": "npm run validate && np --no-2fa"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nolimits4web/dom7.git"
+    "url": "git+https://zalogit2.zing.vn/ZaloMiniApps/zma-dom.git"
   },
   "keywords": [
     "dom",
-    "dom7",
+    "zma-dom",
     "jquery",
     "mobile",
     "framework7"
@@ -33,9 +34,9 @@
   "author": "Vladimir Kharlampidi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nolimits4web/dom7/issues"
+    "url": "https://github.com/tukida/zma-dom/issues"
   },
-  "homepage": "https://framework7.io/docs/dom7.html",
+  "homepage": "https://h5.zalo.me/zma/docs/zma-dom.html",
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
@@ -53,9 +54,23 @@
     "prettier": "^2.1.2",
     "rollup": "^2.33.1",
     "serve": "^11.3.2",
-    "terser": "^5.3.8"
+    "terser": "^5.3.8",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "husky": "^4.3.8",
+    "np": "^7.2.0"
+  },
+  "np": {
+    "yarn": true,
+    "runPublish": true
   },
   "dependencies": {
-    "ssr-window": "^3.0.0"
+    "ssr-window": "^3.0.0",
+    "npm": "^6.14.11"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }

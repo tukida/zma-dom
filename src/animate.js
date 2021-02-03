@@ -38,7 +38,7 @@ function animate(initialProps, initialParams) {
       a.animating = false;
       a.elements.each((el) => {
         const element = el;
-        delete element.dom7AnimateInstance;
+        delete element.zmaDOMAnimateInstance;
       });
       a.que = [];
     },
@@ -46,7 +46,7 @@ function animate(initialProps, initialParams) {
       a.animating = false;
       a.elements.each((el) => {
         const element = el;
-        delete element.dom7AnimateInstance;
+        delete element.zmaDOMAnimateInstance;
       });
       if (complete) complete(els);
       if (a.que.length > 0) {
@@ -69,7 +69,8 @@ function animate(initialProps, initialParams) {
         let finalValue;
         let finalFullValue;
 
-        if (!el.dom7AnimateInstance) a.elements[index].dom7AnimateInstance = a;
+        if (!el.zmaDOMAnimateInstance)
+          a.elements[index].zmaDOMAnimateInstance = a;
 
         elements[index] = {
           container: el,
@@ -178,9 +179,9 @@ function animate(initialProps, initialParams) {
 
   let animateInstance;
   for (let i = 0; i < a.elements.length; i += 1) {
-    if (a.elements[i].dom7AnimateInstance) {
-      animateInstance = a.elements[i].dom7AnimateInstance;
-    } else a.elements[i].dom7AnimateInstance = a;
+    if (a.elements[i].zmaDOMAnimateInstance) {
+      animateInstance = a.elements[i].zmaDOMAnimateInstance;
+    } else a.elements[i].zmaDOMAnimateInstance = a;
   }
   if (!animateInstance) {
     animateInstance = a;
@@ -198,8 +199,8 @@ function animate(initialProps, initialParams) {
 function stop() {
   const els = this;
   for (let i = 0; i < els.length; i += 1) {
-    if (els[i].dom7AnimateInstance) {
-      els[i].dom7AnimateInstance.stop();
+    if (els[i].zmaDOMAnimateInstance) {
+      els[i].zmaDOMAnimateInstance.stop();
     }
   }
 }

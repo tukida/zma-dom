@@ -1,6 +1,6 @@
 import { getWindow, getDocument } from 'ssr-window';
 import $ from './$';
-import Dom7 from './dom7-class';
+import Dom7 from './zma-dom-class';
 import { arrayFlat, arrayFilter, toCamelCase } from './utils';
 
 function addClass(...classes) {
@@ -91,8 +91,8 @@ function data(key, value) {
     el = this[0];
     if (!el) return undefined;
     // Get value
-    if (el.dom7ElementDataStorage && key in el.dom7ElementDataStorage) {
-      return el.dom7ElementDataStorage[key];
+    if (el.zmaDOMElementDataStorage && key in el.zmaDOMElementDataStorage) {
+      return el.zmaDOMElementDataStorage[key];
     }
 
     const dataKey = el.getAttribute(`data-${key}`);
@@ -105,17 +105,17 @@ function data(key, value) {
   // Set value
   for (let i = 0; i < this.length; i += 1) {
     el = this[i];
-    if (!el.dom7ElementDataStorage) el.dom7ElementDataStorage = {};
-    el.dom7ElementDataStorage[key] = value;
+    if (!el.zmaDOMElementDataStorage) el.zmaDOMElementDataStorage = {};
+    el.zmaDOMElementDataStorage[key] = value;
   }
   return this;
 }
 function removeData(key) {
   for (let i = 0; i < this.length; i += 1) {
     const el = this[i];
-    if (el.dom7ElementDataStorage && el.dom7ElementDataStorage[key]) {
-      el.dom7ElementDataStorage[key] = null;
-      delete el.dom7ElementDataStorage[key];
+    if (el.zmaDOMElementDataStorage && el.zmaDOMElementDataStorage[key]) {
+      el.zmaDOMElementDataStorage[key] = null;
+      delete el.zmaDOMElementDataStorage[key];
     }
   }
 }
@@ -201,7 +201,7 @@ function on(...args) {
   function handleLiveEvent(e) {
     const target = e.target;
     if (!target) return;
-    const eventData = e.target.dom7EventData || [];
+    const eventData = e.target.zmaDOMEventData || [];
     if (eventData.indexOf(e) < 0) {
       eventData.unshift(e);
     }
@@ -215,7 +215,7 @@ function on(...args) {
     }
   }
   function handleEvent(e) {
-    const eventData = e && e.target ? e.target.dom7EventData || [] : [];
+    const eventData = e && e.target ? e.target.zmaDOMEventData || [] : [];
     if (eventData.indexOf(e) < 0) {
       eventData.unshift(e);
     }
@@ -228,9 +228,9 @@ function on(...args) {
     if (!targetSelector) {
       for (j = 0; j < events.length; j += 1) {
         const event = events[j];
-        if (!el.dom7Listeners) el.dom7Listeners = {};
-        if (!el.dom7Listeners[event]) el.dom7Listeners[event] = [];
-        el.dom7Listeners[event].push({
+        if (!el.zmaDOMListeners) el.zmaDOMListeners = {};
+        if (!el.zmaDOMListeners[event]) el.zmaDOMListeners[event] = [];
+        el.zmaDOMListeners[event].push({
           listener,
           proxyListener: handleEvent,
         });
@@ -240,9 +240,9 @@ function on(...args) {
       // Live events
       for (j = 0; j < events.length; j += 1) {
         const event = events[j];
-        if (!el.dom7LiveListeners) el.dom7LiveListeners = {};
-        if (!el.dom7LiveListeners[event]) el.dom7LiveListeners[event] = [];
-        el.dom7LiveListeners[event].push({
+        if (!el.zmaDOMLiveListeners) el.zmaDOMLiveListeners = {};
+        if (!el.zmaDOMLiveListeners[event]) el.zmaDOMLiveListeners[event] = [];
+        el.zmaDOMLiveListeners[event].push({
           listener,
           proxyListener: handleLiveEvent,
         });
@@ -266,10 +266,10 @@ function off(...args) {
     for (let j = 0; j < this.length; j += 1) {
       const el = this[j];
       let handlers;
-      if (!targetSelector && el.dom7Listeners) {
-        handlers = el.dom7Listeners[event];
-      } else if (targetSelector && el.dom7LiveListeners) {
-        handlers = el.dom7LiveListeners[event];
+      if (!targetSelector && el.zmaDOMListeners) {
+        handlers = el.zmaDOMListeners[event];
+      } else if (targetSelector && el.zmaDOMLiveListeners) {
+        handlers = el.zmaDOMLiveListeners[event];
       }
       if (handlers && handlers.length) {
         for (let k = handlers.length - 1; k >= 0; k -= 1) {
@@ -280,8 +280,8 @@ function off(...args) {
           } else if (
             listener &&
             handler.listener &&
-            handler.listener.dom7proxy &&
-            handler.listener.dom7proxy === listener
+            handler.listener.zmaDOMproxy &&
+            handler.listener.zmaDOMproxy === listener
           ) {
             el.removeEventListener(event, handler.proxyListener, capture);
             handlers.splice(k, 1);
@@ -305,11 +305,11 @@ function once(...args) {
   function onceHandler(...eventArgs) {
     listener.apply(this, eventArgs);
     dom.off(eventName, targetSelector, onceHandler, capture);
-    if (onceHandler.dom7proxy) {
-      delete onceHandler.dom7proxy;
+    if (onceHandler.zmaDOMproxy) {
+      delete onceHandler.zmaDOMproxy;
     }
   }
-  onceHandler.dom7proxy = listener;
+  onceHandler.zmaDOMproxy = listener;
   return dom.on(eventName, targetSelector, onceHandler, capture);
 }
 function trigger(...args) {
@@ -326,10 +326,10 @@ function trigger(...args) {
           bubbles: true,
           cancelable: true,
         });
-        el.dom7EventData = args.filter((data, dataIndex) => dataIndex > 0);
+        el.zmaDOMEventData = args.filter((data, dataIndex) => dataIndex > 0);
         el.dispatchEvent(evt);
-        el.dom7EventData = [];
-        delete el.dom7EventData;
+        el.zmaDOMEventData = [];
+        delete el.zmaDOMEventData;
       }
     }
   }

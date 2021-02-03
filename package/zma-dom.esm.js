@@ -1,20 +1,21 @@
 /**
- * Dom7 3.0.0
+ * zma-dom 0.0.0
  * Minimalistic JavaScript library for DOM manipulation, with a jQuery-compatible API
- * https://framework7.io/docs/dom7.html
+ * https://h5.zalo.me/zma/docs/zma-dom.html
  *
- * Copyright 2020, Vladimir Kharlampidi
+ * Copyright 2021, Vladimir Kharlampidi
  *
  * Licensed under MIT
  *
- * Released on: November 9, 2020
+ * Released on: February 4, 2021
  */
 import { getWindow, getDocument } from 'ssr-window';
 
 function _inheritsLoose(subClass, superClass) {
   subClass.prototype = Object.create(superClass.prototype);
   subClass.prototype.constructor = subClass;
-  subClass.__proto__ = superClass;
+
+  _setPrototypeOf(subClass, superClass);
 }
 
 function _getPrototypeOf(o) {
@@ -354,8 +355,8 @@ function data(key, value) {
     el = this[0];
     if (!el) return undefined; // Get value
 
-    if (el.dom7ElementDataStorage && key in el.dom7ElementDataStorage) {
-      return el.dom7ElementDataStorage[key];
+    if (el.zmaDOMElementDataStorage && key in el.zmaDOMElementDataStorage) {
+      return el.zmaDOMElementDataStorage[key];
     }
 
     var dataKey = el.getAttribute("data-" + key);
@@ -370,8 +371,8 @@ function data(key, value) {
 
   for (var i = 0; i < this.length; i += 1) {
     el = this[i];
-    if (!el.dom7ElementDataStorage) el.dom7ElementDataStorage = {};
-    el.dom7ElementDataStorage[key] = value;
+    if (!el.zmaDOMElementDataStorage) el.zmaDOMElementDataStorage = {};
+    el.zmaDOMElementDataStorage[key] = value;
   }
 
   return this;
@@ -381,9 +382,9 @@ function removeData(key) {
   for (var i = 0; i < this.length; i += 1) {
     var el = this[i];
 
-    if (el.dom7ElementDataStorage && el.dom7ElementDataStorage[key]) {
-      el.dom7ElementDataStorage[key] = null;
-      delete el.dom7ElementDataStorage[key];
+    if (el.zmaDOMElementDataStorage && el.zmaDOMElementDataStorage[key]) {
+      el.zmaDOMElementDataStorage[key] = null;
+      delete el.zmaDOMElementDataStorage[key];
     }
   }
 }
@@ -491,7 +492,7 @@ function on() {
   function handleLiveEvent(e) {
     var target = e.target;
     if (!target) return;
-    var eventData = e.target.dom7EventData || [];
+    var eventData = e.target.zmaDOMEventData || [];
 
     if (eventData.indexOf(e) < 0) {
       eventData.unshift(e);
@@ -508,7 +509,7 @@ function on() {
   }
 
   function handleEvent(e) {
-    var eventData = e && e.target ? e.target.dom7EventData || [] : [];
+    var eventData = e && e.target ? e.target.zmaDOMEventData || [] : [];
 
     if (eventData.indexOf(e) < 0) {
       eventData.unshift(e);
@@ -526,9 +527,9 @@ function on() {
     if (!targetSelector) {
       for (j = 0; j < events.length; j += 1) {
         var event = events[j];
-        if (!el.dom7Listeners) el.dom7Listeners = {};
-        if (!el.dom7Listeners[event]) el.dom7Listeners[event] = [];
-        el.dom7Listeners[event].push({
+        if (!el.zmaDOMListeners) el.zmaDOMListeners = {};
+        if (!el.zmaDOMListeners[event]) el.zmaDOMListeners[event] = [];
+        el.zmaDOMListeners[event].push({
           listener: listener,
           proxyListener: handleEvent
         });
@@ -538,10 +539,10 @@ function on() {
       // Live events
       for (j = 0; j < events.length; j += 1) {
         var _event = events[j];
-        if (!el.dom7LiveListeners) el.dom7LiveListeners = {};
-        if (!el.dom7LiveListeners[_event]) el.dom7LiveListeners[_event] = [];
+        if (!el.zmaDOMLiveListeners) el.zmaDOMLiveListeners = {};
+        if (!el.zmaDOMLiveListeners[_event]) el.zmaDOMLiveListeners[_event] = [];
 
-        el.dom7LiveListeners[_event].push({
+        el.zmaDOMLiveListeners[_event].push({
           listener: listener,
           proxyListener: handleLiveEvent
         });
@@ -581,10 +582,10 @@ function off() {
       var el = this[j];
       var handlers = void 0;
 
-      if (!targetSelector && el.dom7Listeners) {
-        handlers = el.dom7Listeners[event];
-      } else if (targetSelector && el.dom7LiveListeners) {
-        handlers = el.dom7LiveListeners[event];
+      if (!targetSelector && el.zmaDOMListeners) {
+        handlers = el.zmaDOMListeners[event];
+      } else if (targetSelector && el.zmaDOMLiveListeners) {
+        handlers = el.zmaDOMLiveListeners[event];
       }
 
       if (handlers && handlers.length) {
@@ -594,7 +595,7 @@ function off() {
           if (listener && handler.listener === listener) {
             el.removeEventListener(event, handler.proxyListener, capture);
             handlers.splice(k, 1);
-          } else if (listener && handler.listener && handler.listener.dom7proxy && handler.listener.dom7proxy === listener) {
+          } else if (listener && handler.listener && handler.listener.zmaDOMproxy && handler.listener.zmaDOMproxy === listener) {
             el.removeEventListener(event, handler.proxyListener, capture);
             handlers.splice(k, 1);
           } else if (!listener) {
@@ -636,12 +637,12 @@ function once() {
     listener.apply(this, eventArgs);
     dom.off(eventName, targetSelector, onceHandler, capture);
 
-    if (onceHandler.dom7proxy) {
-      delete onceHandler.dom7proxy;
+    if (onceHandler.zmaDOMproxy) {
+      delete onceHandler.zmaDOMproxy;
     }
   }
 
-  onceHandler.dom7proxy = listener;
+  onceHandler.zmaDOMproxy = listener;
   return dom.on(eventName, targetSelector, onceHandler, capture);
 }
 
@@ -667,12 +668,12 @@ function trigger() {
           bubbles: true,
           cancelable: true
         });
-        el.dom7EventData = args.filter(function (data, dataIndex) {
+        el.zmaDOMEventData = args.filter(function (data, dataIndex) {
           return dataIndex > 0;
         });
         el.dispatchEvent(evt);
-        el.dom7EventData = [];
-        delete el.dom7EventData;
+        el.zmaDOMEventData = [];
+        delete el.zmaDOMEventData;
       }
     }
   }
@@ -1479,7 +1480,7 @@ function animate(initialProps, initialParams) {
       a.animating = false;
       a.elements.each(function (el) {
         var element = el;
-        delete element.dom7AnimateInstance;
+        delete element.zmaDOMAnimateInstance;
       });
       a.que = [];
     },
@@ -1487,7 +1488,7 @@ function animate(initialProps, initialParams) {
       a.animating = false;
       a.elements.each(function (el) {
         var element = el;
-        delete element.dom7AnimateInstance;
+        delete element.zmaDOMAnimateInstance;
       });
       if (complete) complete(els);
 
@@ -1510,7 +1511,7 @@ function animate(initialProps, initialParams) {
         var unit;
         var finalValue;
         var finalFullValue;
-        if (!el.dom7AnimateInstance) a.elements[index].dom7AnimateInstance = a;
+        if (!el.zmaDOMAnimateInstance) a.elements[index].zmaDOMAnimateInstance = a;
         elements[index] = {
           container: el
         };
@@ -1610,9 +1611,9 @@ function animate(initialProps, initialParams) {
   var animateInstance;
 
   for (var i = 0; i < a.elements.length; i += 1) {
-    if (a.elements[i].dom7AnimateInstance) {
-      animateInstance = a.elements[i].dom7AnimateInstance;
-    } else a.elements[i].dom7AnimateInstance = a;
+    if (a.elements[i].zmaDOMAnimateInstance) {
+      animateInstance = a.elements[i].zmaDOMAnimateInstance;
+    } else a.elements[i].zmaDOMAnimateInstance = a;
   }
 
   if (!animateInstance) {
@@ -1632,8 +1633,8 @@ function stop() {
   var els = this;
 
   for (var i = 0; i < els.length; i += 1) {
-    if (els[i].dom7AnimateInstance) {
-      els[i].dom7AnimateInstance.stop();
+    if (els[i].zmaDOMAnimateInstance) {
+      els[i].zmaDOMAnimateInstance.stop();
     }
   }
 }

@@ -1,5 +1,5 @@
 const { getDocument } = require('ssr-window');
-const { $, addClass, width } = require('../package/dom7.cjs');
+const { $, addClass, width } = require('../package/zma-dom.cjs');
 
 const document = getDocument();
 

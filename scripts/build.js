@@ -21,7 +21,7 @@ const version = process.env.VERSION || pkg.version;
 
 const banner = `
 /**
- * Dom7 ${version}
+ * zma-dom ${version}
  * ${pkg.description}
  * ${pkg.homepage}
  *
@@ -35,7 +35,7 @@ const banner = `
 
 function buildUMD() {
   rollup({
-    input: path.resolve(__dirname, '../src/dom7.bundle.js'),
+    input: path.resolve(__dirname, '../src/zma-dom.bundle.js'),
     plugins: [nodeResolve(), babel({ babelHelpers: 'bundled' })],
   })
     .then((bundle) => {
@@ -43,7 +43,7 @@ function buildUMD() {
         strict: true,
         name: 'Dom7',
         format: 'umd',
-        file: path.resolve(__dirname, `../${outDir}/dom7.js`),
+        file: path.resolve(__dirname, `../${outDir}/zma-dom.js`),
         sourcemap: false,
         banner,
       });
@@ -53,19 +53,19 @@ function buildUMD() {
       const minified = await minify(result.code, {
         sourceMap: {
           content: result.map,
-          filename: `dom7.min.js`,
-          url: `dom7.min.js.map`,
+          filename: `zma-dom.min.js`,
+          url: `zma-dom.min.js.map`,
         },
         output: {
           preamble: banner,
         },
       });
       fs.writeFileSync(
-        path.resolve(__dirname, `../${outDir}/dom7.min.js`),
+        path.resolve(__dirname, `../${outDir}/zma-dom.min.js`),
         minified.code,
       );
       fs.writeFileSync(
-        path.resolve(__dirname, `../${outDir}/dom7.min.js.map`),
+        path.resolve(__dirname, `../${outDir}/zma-dom.min.js.map`),
         minified.map,
       );
     })
@@ -76,7 +76,7 @@ function buildUMD() {
 
 function buildESM() {
   rollup({
-    input: path.resolve(__dirname, '../src/dom7.js'),
+    input: path.resolve(__dirname, '../src/zma-dom.js'),
     plugins: [nodeResolve(), babel({ babelHelpers: 'bundled' })],
     external: ['ssr-window'],
     onwarn() {
@@ -88,7 +88,7 @@ function buildESM() {
       return bundle.write({
         strict: true,
         format: 'esm',
-        file: path.resolve(__dirname, `../${outDir}/dom7.esm.js`),
+        file: path.resolve(__dirname, `../${outDir}/zma-dom.esm.js`),
         sourcemap: false,
         banner,
       });
@@ -99,7 +99,7 @@ function buildESM() {
 }
 function buildCJS() {
   rollup({
-    input: path.resolve(__dirname, '../src/dom7.js'),
+    input: path.resolve(__dirname, '../src/zma-dom.js'),
     plugins: [nodeResolve(), babel({ babelHelpers: 'bundled' })],
     external: ['ssr-window'],
     onwarn() {
@@ -111,7 +111,7 @@ function buildCJS() {
       return bundle.write({
         strict: true,
         format: 'cjs',
-        file: path.resolve(__dirname, `../${outDir}/dom7.cjs.js`),
+        file: path.resolve(__dirname, `../${outDir}/zma-dom.cjs.js`),
         sourcemap: false,
         banner,
       });
@@ -123,8 +123,8 @@ function buildCJS() {
 
 function copyDts() {
   fs.copyFileSync(
-    path.resolve(__dirname, '../src/dom7.d.ts'),
-    path.resolve(__dirname, '../package/dom7.d.ts'),
+    path.resolve(__dirname, '../src/zma-dom.d.ts'),
+    path.resolve(__dirname, '../package/zma-dom.d.ts'),
   );
 }
 
